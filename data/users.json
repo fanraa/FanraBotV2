@@ -1,0 +1,196 @@
+{
+  "6283172993747": {
+    "id": "6283172993747",
+    "phoneNumber": "6283172993747",
+    "name": "User",
+    "interactions": 25,
+    "createdAt": "2025-11-30T13:01:43.290Z",
+    "lastSeen": "2025-11-30T13:19:35.361Z",
+    "role": "bot",
+    "tokens": 10
+  },
+  "256594885476360": {
+    "id": "256594885476360",
+    "phoneNumber": "256594885476360",
+    "name": "L",
+    "interactions": 23,
+    "createdAt": "2025-11-30T13:01:47.535Z",
+    "lastSeen": "2025-11-30T13:19:26.263Z",
+    "role": "member",
+    "tokens": 10
+  },
+  "19074033676492": {
+    "id": "19074033676492",
+    "phoneNumber": "19074033676492",
+    "name": "S A",
+    "interactions": 8,
+    "createdAt": "2025-11-30T13:01:48.319Z",
+    "lastSeen": "2025-11-30T13:04:12.516Z",
+    "role": "member",
+    "tokens": 10
+  },
+  "98651707846687": {
+    "id": "98651707846687",
+    "phoneNumber": "98651707846687",
+    "name": "⋆˚𝜗𝜚˚⋆𝐶𝑟𝑦 𝐵𝑎𝑏𝑦⋆.",
+    "interactions": 21,
+    "createdAt": "2025-11-30T13:01:55.083Z",
+    "lastSeen": "2025-11-30T13:19:29.442Z",
+    "role": "member",
+    "tokens": 10
+  },
+  "180866022174958": {
+    "id": "180866022174958",
+    "phoneNumber": "180866022174958",
+    "name": "MaLuthuli✨️",
+    "interactions": 16,
+    "createdAt": "2025-11-30T13:02:02.460Z",
+    "lastSeen": "2025-11-30T13:15:52.534Z",
+    "role": "member",
+    "tokens": 10
+  },
+  "263930622525541": {
+    "id": "263930622525541",
+    "phoneNumber": "263930622525541",
+    "name": "🫣",
+    "interactions": 17,
+    "createdAt": "2025-11-30T13:02:02.486Z",
+    "lastSeen": "2025-11-30T13:19:27.070Z",
+    "role": "member",
+    "tokens": 10
+  },
+  "46424318300381": {
+    "id": "46424318300381",
+    "phoneNumber": "46424318300381",
+    "name": "😊",
+    "interactions": 2,
+    "createdAt": "2025-11-30T13:02:09.067Z",
+    "lastSeen": "2025-11-30T13:06:37.393Z",
+    "role": "member",
+    "tokens": 10
+  },
+  "88790244827277": {
+    "id": "88790244827277",
+    "phoneNumber": "88790244827277",
+    "name": "wylonalona",
+    "interactions": 1,
+    "createdAt": "2025-11-30T13:02:26.304Z",
+    "lastSeen": "2025-11-30T13:02:26.304Z",
+    "role": "member",
+    "tokens": 10
+  },
+  "151505441148965": {
+    "id": "151505441148965",
+    "phoneNumber": "151505441148965",
+    "name": "rap",
+    "interactions": 2,
+    "createdAt": "2025-11-30T13:02:33.193Z",
+    "lastSeen": "2025-11-30T13:15:11.361Z",
+    "role": "member",
+    "tokens": 10
+  },
+  "6790494347481": {
+    "id": "6790494347481",
+    "phoneNumber": "6790494347481",
+    "name": "User",
+    "interactions": 14,
+    "createdAt": "2025-11-30T13:02:39.301Z",
+    "lastSeen": "2025-11-30T13:19:36.883Z",
+    "role": "owner",
+    "tokens": 10,
+    "antilink": {
+      "date": "2025-11-30",
+      "count": 1
+    }
+  },
+  "151492656890087": {
+    "id": "151492656890087",
+    "phoneNumber": "151492656890087",
+    "name": "Alwandieeeeeeee",
+    "interactions": 10,
+    "createdAt": "2025-11-30T13:02:48.066Z",
+    "lastSeen": "2025-11-30T13:14:21.627Z",
+    "role": "member",
+    "tokens": 10
+  },
+  "93845656195169": {
+    "id": "93845656195169",
+    "phoneNumber": "93845656195169",
+    "name": "Fanrabot",
+    "interactions": 6,
+    "createdAt": "2025-11-30T13:03:22.629Z",
+    "lastSeen": "2025-11-30T13:11:48.534Z",
+    "role": "member",
+    "tokens": 10
+  },
+  "137666872004636": {
+    "id": "137666872004636",
+    "phoneNumber": "137666872004636",
+    "name": "𓍼 ݁",
+    "interactions": 3,
+    "createdAt": "2025-11-30T13:04:00.898Z",
+    "lastSeen": "2025-11-30T13:19:35.351Z",
+    "role": "member",
+    "tokens": 10
+  },
+  "87149349212239": {
+    "id": "87149349212239",
+    "phoneNumber": "87149349212239",
+    "name": "Kinesh",
+    "interactions": 2,
+    "createdAt": "2025-11-30T13:06:21.453Z",
+    "lastSeen": "2025-11-30T13:06:24.861Z",
+    "role": "member",
+    "tokens": 10
+  },
+  "240917885792463": {
+    "id": "240917885792463",
+    "phoneNumber": "240917885792463",
+    "name": "KAKANG LURAH",
+    "interactions": 1,
+    "createdAt": "2025-11-30T13:11:09.201Z",
+    "lastSeen": "2025-11-30T13:11:09.201Z",
+    "role": "member",
+    "tokens": 10
+  },
+  "186848458584295": {
+    "id": "186848458584295",
+    "phoneNumber": "186848458584295",
+    "name": "Dn🦖",
+    "interactions": 1,
+    "createdAt": "2025-11-30T13:15:12.520Z",
+    "lastSeen": "2025-11-30T13:15:12.520Z",
+    "role": "member",
+    "tokens": 10
+  },
+  "124528885805127": {
+    "id": "124528885805127",
+    "phoneNumber": "124528885805127",
+    "name": "qes.",
+    "interactions": 1,
+    "createdAt": "2025-11-30T13:19:14.490Z",
+    "lastSeen": "2025-11-30T13:19:14.490Z",
+    "role": "member",
+    "tokens": 10
+  },
+  "204634371141670": {
+    "id": "204634371141670",
+    "phoneNumber": "204634371141670",
+    "name": "Yù Mêi Rèn 💫💖",
+    "interactions": 1,
+    "createdAt": "2025-11-30T13:19:29.487Z",
+    "lastSeen": "2025-11-30T13:19:29.487Z",
+    "role": "member",
+    "tokens": 10
+  },
+  "6285788918217": {
+    "id": "6285788918217",
+    "phoneNumber": "6285788918217",
+    "name": "fanra",
+    "interactions": 1,
+    "createdAt": "2025-11-30T13:19:35.969Z",
+    "lastSeen": "2025-11-30T13:19:35.969Z",
+    "role": "owner",
+    "tokens": 10
+  }
+}
