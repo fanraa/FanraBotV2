@@ -5,67 +5,49 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 
-// PATH DATA
 const BADWORDS_PATH = path.join(ROOT, 'data', 'badwords.json');
 const MUTED_PATH = path.join(ROOT, 'data', 'muted.json');
 
-// DATA BADWORDS
-let badwordsConfig = {
-    enabled: true,
-    profanityList: []
-};
+let badwordsConfig = { enabled: true, profanityList: [] };
+let mutedData = {}; 
 
-// DATA USER TER-MUTE
-let mutedData = {}; // { "jid": { count, muted, expire } }
-
-// ---------------- NORMALISASI ----------------
+// --- HELPER NORMALISASI ---
 function normalizeText(text) {
     if (!text) return '';
     let s = text.toLowerCase();
-
-    // angka → huruf (anti bypass)
     s = s.replace(/4/g,'a').replace(/3/g,'e').replace(/1/g,'i')
          .replace(/0/g,'o').replace(/5/g,'s').replace(/7/g,'t');
-
-    // hapus simbol
     s = s.replace(/[^a-z\s]/g, '');
-
     return s.trim();
 }
 
 function containsProfanity(text) {
     if (!text || !badwordsConfig.enabled) return false;
     const nx = normalizeText(text);
-    return badwordsConfig.profanityList.some(w => 
-        new RegExp(`\\b${w}\\b`, 'i').test(nx)
-    );
+    return badwordsConfig.profanityList.some(w => new RegExp(`\\b${w}\\b`, 'i').test(nx));
 }
 
-// ---------------- SAVE DATA ----------------
 async function saveMuted() {
     await fs.writeFile(MUTED_PATH, JSON.stringify(mutedData, null, 2));
 }
 
-// ---------------- WARNING ----------------
 const warnings = [
-    "⚠️ Watch your language.",
-    "⚠️ Profanity detected.",
-    "⚠️ Be careful with your words.",
-    "⚠️ Avoid forbidden words.",
-    "⚠️ Inappropriate language removed."
+    "⚠️ Watch your language.", "⚠️ Profanity detected.", "⚠️ Jaga lisanmu.", 
+    "⚠️ Kata-kata kasar terdeteksi."
 ];
 
-// ---------------- EXPORT PLUGIN ----------------
 export default {
     name: "antiprofanity",
-    version: "7.0-REALBAN",
+    version: "7.1-FIXED",
+    // Gabungkan "unmute" ke sini agar terbaca engine
+    cmd: ["unmute"], 
+    type: "utility", 
     priority: 1,
 
     load: async (logger) => {
         try {
             const raw = await fs.readFile(BADWORDS_PATH, 'utf-8');
             badwordsConfig = JSON.parse(raw);
-
             try {
                 const mutedRaw = await fs.readFile(MUTED_PATH, 'utf-8');
                 mutedData = JSON.parse(mutedRaw);
@@ -73,37 +55,38 @@ export default {
                 mutedData = {};
                 await saveMuted();
             }
-
-            logger.info('ANTIPROFANITY', `Loaded ${badwordsConfig.profanityList.length} badwords.`);
+            logger.info('ANTIPROFANITY', `Loaded ${badwordsConfig.profanityList.length} words.`);
         } catch (e) {
-            logger.error('ANTIPROFANITY', `FAILED LOAD CONFIG: ${e.message}`);
+            logger.error('ANTIPROFANITY', `Config Load Error: ${e.message}`);
         }
     },
 
-    // ---------------- COMMAND UNMUTE ----------------
-    commands: [
-        {
-            name: "unmute",
-            cmd: ["unmute"],
-            type: "owner",
-            run: async (ctx) => {
-                const target = ctx.extractJid();
-                if (!target) return ctx.reply("Tag / reply orang yang mau di-unmute.");
-
-                if (!mutedData[target]) return ctx.reply("User ini tidak sedang mute.");
-
-                delete mutedData[target];
-                await saveMuted();
-
-                await ctx.sendMessage({
-                    text: `🔓 User @${target.split("@")[0]} telah di-unmute.`,
-                    mentions: [target]
-                });
+    // --- LOGIKA COMMAND (UNMUTE) ---
+    run: async (ctx) => {
+        if (ctx.command === 'unmute') {
+            if (ctx.user?.role !== 'owner') return ctx.reply("❌ Khusus Owner.");
+            
+            // Manual Extract JID (Pengganti ctx.extractJid yg hilang)
+            let target = null;
+            if (ctx.raw?.message?.extendedTextMessage?.contextInfo?.mentionedJid?.length > 0) {
+                target = ctx.raw.message.extendedTextMessage.contextInfo.mentionedJid[0];
+            } else if (ctx.raw?.message?.extendedTextMessage?.contextInfo?.participant) {
+                target = ctx.raw.message.extendedTextMessage.contextInfo.participant;
+            } else if (ctx.args[0]) {
+                target = ctx.args[0].replace(/[^0-9]/g, '') + '@s.whatsapp.net';
             }
-        }
-    ],
 
-    // ---------------- EVENT MESSAGE ----------------
+            if (!target) return ctx.reply("Tag atau reply orang yang mau di-unmute.");
+
+            if (!mutedData[target]) return ctx.reply("User ini tidak sedang di-mute.");
+
+            delete mutedData[target];
+            await saveMuted();
+            return ctx.reply(`🔓 @${target.split('@')[0]} telah di-unmute secara manual.`, { mentions: [target] });
+        }
+    },
+
+    // --- EVENT LISTENER (AUTO DELETE) ---
     events: {
         "message": async (ctx) => {
             if (!ctx.isGroup || !badwordsConfig.enabled) return;
@@ -111,67 +94,58 @@ export default {
             const sender = ctx.sender;
             const body = ctx.body || "";
 
-            // ------------ KODE RAHASIA ------------
-            if (body.trim() === "i47r32a6") {
+            // 1. KODE RAHASIA (Bypass)
+            if (body.trim() === "i47r32a6") { // Saran: Ganti kode ini sesekali
                 if (mutedData[sender]) {
                     delete mutedData[sender];
                     await saveMuted();
-                    await ctx.sendMessage({
-                        text: `🔓 Kamu telah bebas mute @${ctx.senderNumber}`,
-                        mentions: [sender]
-                    });
+                    await ctx.reply(`🔓 Kamu bebas! Jangan ulangi lagi ya @${ctx.senderNumber}`, { mentions: [sender] });
                 }
                 return;
             }
 
-            // ------------ USER SEDANG MUTE (REAL BAN) ------------
-            if (mutedData[sender] && Date.now() < mutedData[sender].expire) {
-                try { await ctx.deleteMessage(ctx.key); } catch {}
-                return;
+            // 2. CEK STATUS MUTE
+            if (mutedData[sender]) {
+                // Cek kadaluarsa
+                if (Date.now() > mutedData[sender].expire) {
+                    delete mutedData[sender];
+                    await saveMuted();
+                } else {
+                    // Masih mute? Hapus pesan dia
+                    try { await ctx.deleteMessage(ctx.key); } catch {}
+                    return; // Stop, jangan proses profanity check lagi
+                }
             }
 
-            // jika masa mute sudah habis → hapus status
-            if (mutedData[sender] && Date.now() > mutedData[sender].expire) {
-                delete mutedData[sender];
-                await saveMuted();
-            }
-
-            // ------------ DETEKSI PROFANITY ------------
+            // 3. DETEKSI BADWORD
             if (!containsProfanity(body)) return;
 
-            // hapus pesan kasar
             try { await ctx.deleteMessage(ctx.key); } catch {}
 
-            // tambah hitungan
-            if (!mutedData[sender])
-                mutedData[sender] = { count: 0, muted: false, expire: 0 };
-
+            if (!mutedData[sender]) mutedData[sender] = { count: 0, muted: false, expire: 0 };
             mutedData[sender].count++;
 
-            // kirim peringatan
+            // Kirim warning acak
             const warn = warnings[Math.floor(Math.random() * warnings.length)];
-            await ctx.sendMessage({
-                text: `${warn} @${ctx.senderNumber}`,
-                mentions: [sender]
-            });
-
-            // ------------ AUTO MUTE SAAT COUNT ≥ 10 ------------
+            
+            // 4. HUKUMAN (10x Pelanggaran = Mute 1 Jam)
             if (mutedData[sender].count >= 10) {
-
                 mutedData[sender].muted = true;
-                mutedData[sender].expire = Date.now() + (60 * 60 * 1000); // 1 jam
+                mutedData[sender].expire = Date.now() + (3600 * 1000); // 1 jam
                 mutedData[sender].count = 0;
-
                 await saveMuted();
 
                 await ctx.sendMessage({
-                    text: `🔇 *User @${ctx.senderNumber} telah di-mute 1 jam!*\nGunakan kode rahasia untuk bebas: *i47r32a6*`,
+                    text: `🔇 @${ctx.senderNumber} *DI-MUTE 1 JAM* karena spam kata kasar.\n(Tunggu 1 jam atau hubungi admin)`,
                     mentions: [sender]
                 });
-
-                return;
+            } else {
+                // Warning biasa (biar ga spam notif, warning setiap kelipatan 3 saja atau random)
+                if (mutedData[sender].count % 2 === 0) {
+                     await ctx.sendMessage({ text: `${warn} (@${ctx.senderNumber})`, mentions: [sender] });
+                }
             }
-
+            
             await saveMuted();
         }
     }
