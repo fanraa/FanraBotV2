@@ -1,0 +1,151 @@
+{
+    "botName": "FanraBot",
+    "intents": [
+        {
+            "id": "greeting",
+            "priority": 15,
+            "patterns": [
+                "^(hello|hi|hey|good morning|morning|good afternoon|good evening|greetings|hallo)\\s*(there|everyone|all|bot|fanrabot)?\\s*[!?. ]*$",
+                "^(how are you|how do you do|how's it going|what's up|sup|whats up|how is life|how are things)\\s*(bro|mate|dude|bot)?\\s*[!?. ]*$",
+                "^(anyone there|is anyone here|are you active|you up|you online)\\s*[!?. ]*$"
+            ],
+            "responses": [
+                "Hello! How may I assist you today? I'm here for group management and quick answers.",
+                "Hi there! Glad to see you. What's on your mind?",
+                "I am doing well, thank you for asking! I'm optimized and ready to serve. How about yourself?",
+                "Hey! I'm online. My core purpose is group management. How can I assist?",
+                "Good morning/afternoon/evening! I'm here and ready to assist."
+            ]
+        },
+        {
+            "id": "identity",
+            "priority": 14,
+            "patterns": [
+                "^(who are you|what are you|what is your name|are you a bot|what do you do|your purpose|what can you do)\\s*[!?. ]*$",
+                "^(where are you from|where is your server|are you real)\\s*[!?. ]*$",
+                "^(are you a real person|you're not an ai|you're just code)\\s*[!?. ]*$"
+            ],
+            "responses": [
+                "I am {{botName}}, an automated assistant created by my Owner to help manage this international group.",
+                "My name is {{botName}}. I'm here to enforce rules, filter spam, and answer basic questions.",
+                "I exist to serve the administrative needs of this group. I'm a programmed entity, not human.",
+                "I'm a bot! I keep things organized and respond to your queries. My code lives securely in the cloud."
+            ]
+        },
+        {
+            "id": "thanks",
+            "priority": 13,
+            "patterns": [
+                "^(thank you|thanks|tx|cheers|much obliged|i owe you)\\s*[!?. ]*$",
+                "^(you are the best|good bot|best bot|i owe you one|you're a lifesaver)\\s*[!?. ]*$"
+            ],
+            "responses": [
+                "You're very welcome! Feel free to ask if you need anything else.",
+                "My pleasure. Happy to help! That is my purpose.",
+                "No problem at all. Have a great day!",
+                "Thank you for the compliment. I'm glad I could assist."
+            ]
+        },
+        {
+            "id": "bot_status_query",
+            "priority": 12,
+            "patterns": [
+                "^(are you broken|are you working|is the bot working|bot status|is bot online|are you fully functional)\\s*[!?. ]*$"
+            ],
+            "responses": [
+                "I am fully operational and online. All systems are nominal.",
+                "I am working perfectly. Is there something specific you think is broken?",
+                "My status is GREEN. Ready to assist!",
+                "Operational. I am monitoring the group for any activity."
+            ]
+        },
+        {
+            "id": "developer_query",
+            "priority": 11,
+            "patterns": [
+                "^(who is your owner|who made you|who is your developer|who is your god)\\s*[!?. ]*$"
+            ],
+            "responses": [
+                "I was created by my Owner, who ensures I am always up-to-date and functional.",
+                "My developer is the main Owner of this group. They are very skilled!",
+                "I exist because of my developer's dedication. They are in charge of my coding."
+            ]
+        },
+        {
+            "id": "farewell",
+            "priority": 10,
+            "patterns": [
+                "^(bye|goodbye|see you|adios|i am leaving|gonna leave|i'm off|gotta go|time to go|good night|im going to sleep)\\s*[!?. ]*$"
+            ],
+            "responses": [
+                "Goodbye! Have a great time, or a restful sleep.",
+                "See you later! Feel free to call me again.",
+                "Adios! Come back soon. Safe travels.",
+                "Take care! Wishing you the best."
+            ]
+        },
+        {
+            "id": "emotion_compliment",
+            "priority": 9,
+            "patterns": [
+                "^(you are (smart|clever|fast|responsive|helpful|cool|epic|legendary))\\s*[!?. ]*$",
+                "^(nice work|well done|great job|amazing job)\\s*[!?. ]*$"
+            ],
+            "responses": [
+                "Aww, thank you! I strive to be helpful.",
+                "I appreciate the compliment. My functions are running smoothly!",
+                "That's high praise! I'm glad I meet your expectations.",
+                "Thank you! I try my best to be the best bot in the group."
+            ]
+        },
+        {
+            "id": "emotion_laughter",
+            "priority": 8,
+            "patterns": [
+                "^(lol|lmao|haha|lmfao|hehehe|xd|that's funny|i am amused)\\s*[!?. ]*$"
+            ],
+            "responses": [
+                "That sounds hilarious! I'm glad you found that amusing.",
+                "I detect amusement in your message. Continuing operations...",
+                "Haha! I'm pleased to see positive interactions.",
+                "Indeed! A little laughter is good for the group atmosphere."
+            ]
+        },
+        {
+            "id": "ability_check",
+            "priority": 6,
+            "patterns": [
+                "^(can you not|can you do this|can you answer|are you able to|can you actually answer)\\s*[!?.]*$",
+                "^(why can\\'t you|you cant)\\s*[!?.]*$"
+            ],
+            "responses": [
+                "My abilities are strong, but not infinite! What's the query?",
+                "I am a specialized bot. I can answer what I am programmed for, or use external intelligence.",
+                "I should be able to. What makes you think I can't do something?"
+            ]
+        },
+        {
+            "id": "simple_query_fallback",
+            "priority": 2,
+            "patterns": [
+                "^(what is|tell me about|explain|who is|where is|when is|how to)\\s+.*\\s*\\?$", 
+                "can you tell me.*\\?"
+            ],
+            "responses": [
+                "That is an interesting query! Unfortunately, I am only a conversational assistant and do not have access to the internet or external knowledge bases.", 
+                "I cannot answer complex questions or provide real-time data. You might want to use a search engine for that!",
+                "Apologies, but my knowledge is limited to simple chat and group management. I recommend checking the pinned messages."
+            ]
+        },
+        {
+            "id": "unrecognized",
+            "priority": 1,
+            "patterns": [".*"],
+            "responses": [
+                "I'm sorry, I don't recognize that specific query. I am only programmed for simple greetings and known keywords.",
+                "That's outside my current knowledge base. Could you try a simpler question or a command?",
+                "Apologies, I couldn't process that. My functions are limited to basic conversation."
+            ]
+        }
+    ]
+}

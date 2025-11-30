@@ -1,0 +1,16 @@
+{
+    "enabled": true,
+    "warningTemplate": "🚨 MESSAGE DELETED: Attention @{{userTag}}! Your message was removed. Using inappropriate language, hate speech, or bullying is strictly prohibited. Keep your tone civil and respectful.",
+    "profanityList": [
+        "memeku", "fuck", "shit", "asshole", "bitch", "cunt", "motherfucker", "dick", "pussy", "cock", "whore",
+        "slut", "bastard", "damn", "twat", "tosser", "prick", "queer", "faggot", "nigger", "kike",
+        "tranny", "retard", "cripple", "ugly", "loser", "failure", "stupid", "idiot", "suck my",
+        "kill yourself", "kys", "unalive", "suicide", "bollocks", "shag", "chink", "spic", "gringo",
+        "anjing", "asu", "goblok", "tolol", "bodoh", "idiot", "kampret", "bego", "koplak", "jancuk", 
+        "kontol", "memek", "titit", "pler", "pepek", "ngentot", "ewe", "tempik", "kimak", "tai",
+        "setan", "iblis", "goblog", "sialan", "sampah", "bangsat", "brengsek", "goblog", "njing",
+        "tetek", "kontolodon", "memeq", "babi", "puta", "cabron", "mierda", "pendejo", "coño", "gilipollas", 
+        "hijo de puta", "joder", "scheisse", "arschloch", "hure", "ficken", "verdammt", "dummkopf", 
+        "debil", "putanginamo", "ulol", "gago", "kupal"
+    ]
+}

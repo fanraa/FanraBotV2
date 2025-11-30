@@ -1,0 +1,9 @@
+{
+  "watch": ["core", "plugins", "config", "main.js"],
+  "ext": "js,json",
+  "ignore": ["logs/*", "data/*", "node_modules/*", "session/*"],
+  "execMap": {
+    "js": "node"
+  },
+  "delay": "250ms"
+}
