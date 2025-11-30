@@ -1,5 +1,5 @@
 // plugins/antispam.js
-// 🛡️ ANTI-SPAM (Batch Delete) & ANTI-VIRTEX
+// 🛡️ ANTI-SPAM (Batch Delete) & ANTI-VIRTEX (Auto Kick Enabled)
 // ==========================================
 
 // Map untuk menyimpan data spam user
@@ -8,7 +8,7 @@ const spamMap = new Map();
 
 export default {
   name: "antispam",
-  version: "2.0.0-BATCH",
+  version: "2.1.0-STRICT",
   priority: 0, // Jalankan paling awal
 
   events: {
@@ -23,7 +23,6 @@ export default {
         // ==========================================
         // 1. ANTI-VIRTEX / VIRUS (Prioritas Utama)
         // ==========================================
-        // Penjelasan cara kerja ada di bawah kode
         const isVirtex = 
           body.length > 10000 || // 1. Teks kepanjangan (Overload buffer)
           /(.)\1{50,}/.test(body) || // 2. Karakter berulang 50x (Lagging UI)
@@ -32,13 +31,19 @@ export default {
 
         if (isVirtex) {
            ctx.logger.warn('SECURITY', `☣️ VIRTEX detected from ${ctx.pushName}`);
-           // Hapus pesan virusnya langsung
-           await ctx.deleteMessage(ctx.key);
-           // Kick pelakunya (Opsional, aktifkan jika mau kejam)
-           // await ctx.bot.sock.groupParticipantsUpdate(chatId, [sender], 'remove').catch(()=>{});
            
+           // A. Hapus pesan virusnya langsung
+           await ctx.deleteMessage(ctx.key);
+           
+           // B. KICK PELAKU (SUDAH DIAKTIFKAN)
+           // Bot harus jadi Admin agar ini berfungsi
+           await ctx.bot.sock.groupParticipantsUpdate(chatId, [sender], 'remove').catch((e)=>{
+               ctx.logger.error('SECURITY', `Failed to kick virtex sender: ${e.message}`);
+           });
+           
+           // C. Beritahu Grup
            await ctx.sendMessage({ 
-             text: `☣️ @${ctx.senderNumber} *VIRUS DETECTED* \nMessage deleted for safety.`, 
+             text: `☣️ @${ctx.senderNumber} *VIRUS DETECTED* \nUser has been kicked and message deleted for safety.`, 
              mentions: [sender] 
            });
            return; 
@@ -59,7 +64,7 @@ export default {
         let userData = spamMap.get(keyId) || { 
             lastMsg: '', 
             count: 0, 
-            msgKeys: [], // <-- Array untuk simpan ID pesan 1-4
+            msgKeys: [], 
             lastTime: 0 
         };
 
@@ -68,14 +73,14 @@ export default {
             userData = { 
                 lastMsg: body, 
                 count: 1, 
-                msgKeys: [ctx.key], // Simpan key pesan pertama
+                msgKeys: [ctx.key], 
                 lastTime: now 
             };
         } else {
             // Jika pesan SAMA dan CEPAT
             userData.count++;
             userData.lastTime = now;
-            userData.msgKeys.push(ctx.key); // Simpan key pesan spam ini
+            userData.msgKeys.push(ctx.key); 
         }
 
         // Update memori
@@ -92,17 +97,14 @@ export default {
         if (userData.count === 5) {
             ctx.logger.warn('SPAM', `⚠️ SPAM WARNING (5x) to ${ctx.pushName} - Batch Deleting...`);
             
-            // 1. Hapus semua pesan yang tersimpan (pesan 1 s/d 5)
-            // Kita loop array msgKeys
+            // Hapus semua pesan sebelumnya
             for (const key of userData.msgKeys) {
                 try { await ctx.deleteMessage(key); } catch {}
             }
             
-            // Kosongkan array keys agar memori hemat (karena pesan udh dihapus)
             userData.msgKeys = []; 
             spamMap.set(keyId, userData);
 
-            // 2. Kirim Peringatan
             await ctx.sendMessage({
                 text: `⚠️ *ANTI-SPAM WARNING* (@${ctx.senderNumber})\nYou have spammed 5 times.\nPrevious messages deleted.\nNext action: *KICK*.`,
                 mentions: [sender]
@@ -110,7 +112,7 @@ export default {
             return;
         }
 
-        // C. Pesan ke 6-9: HAPUS LANGSUNG (Tanpa Warning lagi biar ga ribut)
+        // C. Pesan ke 6-9: HAPUS LANGSUNG
         if (userData.count > 5 && userData.count < 10) {
             await ctx.deleteMessage(ctx.key);
             return;
@@ -132,7 +134,6 @@ export default {
                  ctx.reply('❌ Failed to kick (Bot not Admin?)');
             });
             
-            // Hapus data user dari memori
             spamMap.delete(keyId);
             return;
         }

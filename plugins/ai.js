@@ -2,13 +2,13 @@ import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI } from '@google/genai'; 
-import 'dotenv/config'; // Pastikan env loaded
+import 'dotenv/config'; 
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const AI_DATA_PATH = path.join(ROOT, 'data', 'ai.json');
 
-// --- KONFIGURASI AMAN ---
+// --- KONFIGURASI AMAN (Dari .env) ---
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY; 
 const DM_COOLDOWN_MS = 10000; 
 // -------------------------
@@ -16,15 +16,6 @@ const DM_COOLDOWN_MS = 10000;
 let aiData = { botName: 'Bot', intents: [] };
 let geminiClient; 
 let lastDmTime = new Map(); 
-
-const WELCOME_MESSAGES = [
-    "Welcome aboard! Glad to have you here.",
-    "Hello there! Please read the rules and enjoy your stay.",
-    "A warm welcome to our new member! Hope you enjoy the chat.",
-    "Welcome to the group! Let's keep the conversations flowing.",
-    "Hi! Great to see you join us.",
-    "New member alert! Welcome!"
-];
 
 // --- FUNGSI UTILITY ---
 function cleanQuery(query) {
@@ -71,7 +62,7 @@ async function getSmartIntent(query, isTargeted) {
             const systemInstruction = `You are a helpful assistant named ${aiData.botName}. Keep responses concise, friendly, and primarily in English.`;
 
             const response = await geminiClient.models.generateContent({
-                model: 'gemini-2.0-flash', // Update model jika perlu
+                model: 'gemini-2.0-flash', 
                 contents: [{ role: "user", parts: [{ text: query }] }],
                 config: {
                     systemInstruction: systemInstruction,
@@ -81,7 +72,7 @@ async function getSmartIntent(query, isTargeted) {
             
             return {
                 id: 'gemini_response',
-                responses: [response.text()] // Pastikan menggunakan .text() atau sesuaikan dengan versi library
+                responses: [response.text()] 
             };
             
         } catch (e) {
@@ -96,34 +87,9 @@ async function getSmartIntent(query, isTargeted) {
     return null; 
 }
 
-// --- FUNGSI WELCOME (Menggunakan Context, Bukan Import Engine) ---
-async function sendWelcomeMessage(ctx, chatId, memberJid) {
-    try {
-        const sock = ctx.bot.sock; 
-        // Note: ctx di sini adalah context event 'group-participants.update'
-        
-        if (!sock || !sock.sendMessage) return;
-
-        let groupName = "the group";
-        try {
-            const groupMeta = await sock.groupMetadata(chatId);
-            groupName = groupMeta.subject;
-        } catch (e) {}
-
-        const message = WELCOME_MESSAGES[Math.floor(Math.random() * WELCOME_MESSAGES.length)];
-        const finalMessage = `${message} @${memberJid.split('@')[0]}!`;
-
-        await sock.sendMessage(chatId, { text: finalMessage, mentions: [memberJid] });
-        ctx.logger.info('WELCOME', `Sent welcome to ${memberJid} in ${groupName}.`);
-
-    } catch (e) {
-        ctx.logger.error('WELCOME', `Failed to send welcome: ${e.message}`);
-    }
-}
-
 export default {
     name: "ai_chat",
-    version: "4.2.0-SECURE", 
+    version: "5.0.0-PURE", 
     priority: 5, 
 
     load: async (logger) => {
@@ -183,18 +149,6 @@ export default {
                 await ctx.bot.sock.sendPresenceUpdate('paused', ctx.chatId);
 
                 if (isPrivateChat) lastDmTime.set(ctx.sender, Date.now());
-            }
-        },
-
-        'group-participants.update': async (ctx) => {
-            // Note: ctx di sini berisi { id, participants, action, bot, logger... }
-            const { id: chatId, participants, action } = ctx;
-            if (action !== 'add') return;
-            
-            // Cek apakah plugin welcome lain ada? Jika tidak, jalankan ini.
-            // Agar aman, kita jalankan saja.
-            for (const memberJid of participants) {
-                await sendWelcomeMessage(ctx, chatId, memberJid);
             }
         }
     }
